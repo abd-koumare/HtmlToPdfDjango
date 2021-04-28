@@ -98,6 +98,15 @@ class FeeRequestCreateView(LoginRequiredMixin, CreateView):
         return render(request, self.template_name, context)
 
 
+class FeeRequestTablePageView(TemplateView):
+    template_name = 'core/fee_table.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(FeeRequestTablePageView, self).get_context_data(**kwargs)
+
+        context['fee_requests'] = FeeRequest.objects.all()
+        return context
+    
 class ReasonDataChecker:
     _data = None
     _cleaned_data = None
