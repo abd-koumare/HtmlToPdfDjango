@@ -56,7 +56,10 @@ class FeeRequest(models.Model):
     
     @property
     def get_total_price(self):
-        total_price = FeeReason.objects.filter(request_id=self.id).aggregate(Sum('price'))['price__sum']
+        total_price = FeeReason.objects.filter(request_id=self.id).aggregate(
+            total=Sum(ExpressionWrapper(F('price') * F('quantity'), output_field=models.FloatField()))
+        )['total']
+
         return f'{total_price} XOF'
     
     def __str__(self):
