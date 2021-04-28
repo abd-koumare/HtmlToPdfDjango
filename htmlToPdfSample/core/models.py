@@ -53,7 +53,12 @@ class FeeRequest(models.Model):
     agency = models.CharField(choices=AGENCY_CHOICES, max_length=4, default='0001')
     date = models.DateTimeField()
     timestamp = models.DateField(auto_now_add=True)
-
+    
+    @property
+    def get_total_price(self):
+        total_price = FeeReason.objects.filter(request_id=self.id).aggregate(Sum('price'))['price__sum']
+        return f'{total_price} XOF'
+    
     def __str__(self):
         return f'{self.driver} -> {self.activity}'
 
